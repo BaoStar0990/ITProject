@@ -1,0 +1,14 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --main-color:#dc3545;
+}
+
+.nav-link:hover {
+    color: var(--main-color);
+    transition: 0.2s;
+}

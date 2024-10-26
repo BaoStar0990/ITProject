@@ -1,0 +1,22 @@
+.chairs-wrapper{
+    width: 85%;
+    display: grid;
+    grid-template-columns: repeat(18, 1fr); /* Adjust columns as needed */
+    gap: 10px;
+    height: 400px; /* Set fixed height */
+    overflow: scroll; /* Enable vertical scrolling */
+    padding: 10px;
+}
+.chair{
+    width: 50px;
+    height: 50px;
+    border-radius: 0.5rem;
+}
+.chair-choosing{
+    background-color: var(--bs-primary);
+}
+.chair-choosen{
+    background-color: var(--bs-danger);
+}
+
+
