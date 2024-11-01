@@ -1,52 +1,37 @@
 const express = require('express')
 const router = express.Router()
-const moviesController = require("../controllers/moviesController")
+const movieDetailController = require("../controllers/movieDetailController")
 
-router.get("/", async (req, res) => {
+router.get("/:id", async (req, res) => {
+    const id = req.params.id
     try {
-        // moviesController.getAllMovies((err, result) => {
-        //     res.json(result)
-        // })
-
         let data1 = [];
         let data2 = [];
-        let data3 = [];
-
+  
         const result1 = await new Promise((resolve, reject) => {
-            moviesController.getAllMovies((err, result) => {
+            movieDetailController.getMovieDetail((err, result) => {
                 if (err) {
                     reject(err);
                 } else {
                     resolve(result);
                 }
-            });
+            }, id);
         });
 
         const result2 = await new Promise((resolve, reject) => {
-            moviesController.getAllUpcomingMovies((err, result) => {
+            movieDetailController.getUpcomingSchedule((err, result) => {
                 if (err) {
                     reject(err);
                 } else {
                     resolve(result);
                 }
-            });
+            }, id);
         });
-
-        const result3 = await new Promise((resolve, reject) => {
-            moviesController.getAllCinema((err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        });
-
+  
         // Combine data
         data1 = [...data1, ...result1];
         data2 = [...data2, ...result2];
-        data3 = [...data3, ...result3];
-        const data = [data1, data2, data3];
+        const data = [data1, data2];
         // Send response
         res.json(data);
     } catch (error) {
@@ -54,6 +39,7 @@ router.get("/", async (req, res) => {
         console.error("Error fetching data:", error);
         res.status(500).json({ error: "Failed to fetch data" });
     }
+
 })
 
 module.exports = router

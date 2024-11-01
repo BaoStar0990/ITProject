@@ -46,12 +46,12 @@ function Footer(){
                     
                     <div style={{height: "0.75rem"}} className="container-fluid bg-danger rounded"></div>
 
-                    <div className="my-5 d-flex flex-column">
-                        <a className="text-light text-decoration-none fs-5" href="#"><b>Giờ làm việc:</b> 8h - 1h sáng 
-                        ngày sau (bao gồm Lễ, Tết)</a>
-                        <a className="text-light text-decoration-none fs-5" href="#"><b>Email hỗ trợ: </b>
-                        email@gmail.com</a>
-                        <a className="text-light text-decoration-none fs-5" href="#">Hotline: 19001900</a>
+                    <div className="my-5 d-flex flex-column ">
+                        <p className="text-light text-decoration-none fs-5 mb-0"><b>Giờ làm việc:</b> 8h - 1h sáng 
+                        ngày sau (bao gồm Lễ, Tết)</p>
+                        <p className="text-light text-decoration-none fs-5 mb-0"><b>Email hỗ trợ: </b>
+                        email@gmail.com</p>
+                        <p className="text-light text-decoration-none fs-5">Hotline: 19001900</p>
                     </div>
                 </div>
 

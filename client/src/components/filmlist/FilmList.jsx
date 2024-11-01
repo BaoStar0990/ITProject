@@ -12,6 +12,14 @@ function FilmList(){
     const [showData, setShowData] = useState([]);
     const [selectedRadio, setSelectedRadio] = useState("btnradio1");
 
+    useEffect(() => {
+        axios.get("http://localhost:8000").then((res) => {
+            setData(res.data)
+            setShowData(res.data[0])
+          })
+          .catch(err => console.log(err))
+    }, [])
+
     const DuplicateMovie = () => {
         if(showData){
             const unique = showData.filter((obj, index, array) => {
@@ -24,10 +32,10 @@ function FilmList(){
         }
     }
 
-    const ButtonAvailable = (date) => {
+    const ButtonAvailable = (date, id) => {
         return(!(new Date(date).getMonth() - new Date().getMonth()) 
         ? (sessionStorage.getItem("user") 
-            ? <Link to="/movies/id_demo" className="btn btn-danger">Mua vé</Link>
+            ? <Link to={`/moviedetail/${id}`} className="btn btn-danger">Mua vé</Link>
             : <Link to="/signin" className="btn btn-danger">Mua vé</Link>
             ) 
         : <Link to="/" className="btn btn-danger d-none">Mua vé</Link>)
@@ -41,23 +49,6 @@ function FilmList(){
             return (res.map((item) => {return item.Type})).join(", ")
         }
     }
-
-    const res = () => {
-        console.log(MovieType(2))
-    };
-
-    useEffect(() => {
-        axios.get("http://localhost:8000").then((res) => {
-            setData(res.data)
-            setShowData(res.data[0])
-            console.log(res)
-          })
-          .catch(err => console.log(err))
-    }, [])
-
-    useEffect(() => {
-        console.log(showData)
-    }, [showData])
 
     return(
         <>
@@ -80,16 +71,16 @@ function FilmList(){
                         return(
                             <div className="col-xxl-3 col-xl-4 col-md-6" key={index}>
                                 <div className="card mx-auto" style={{"width": "15rem"}}>
-                                    <a href="#" className="card-image-container">
+                                    <Link className="card-image-container" to={`/moviedetail/${film.MovieID}`}>
                                         <img src={film.MoviePoster} className="card-img-top" alt="poster" width="200px"/>
-                                    </a>
+                                    </Link>
                                     <div className="card-body d-flex flex-column justify-content-between" style={{"height":"200px"}}>
                                         <div>
                                             <h5 className="card-title text-danger">{film.MovieName}</h5>
                                             <p className="card-text mb-0"><b>Thể loại: </b>{MovieType(film.MovieID)}</p>
                                             <p className="card-text"><b>Thời lượng: </b>{film.Duration} phút</p>
                                         </div>
-                                        {ButtonAvailable(film.Movie_OpenTime)}
+                                        {ButtonAvailable(film.Movie_OpenTime, film.MovieID)}
                                     </div>
                                 </div>
                             </div>

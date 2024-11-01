@@ -57,11 +57,11 @@ function Header(){
                             </ul>
                             <div className="d-flex flex-column gap-1">
                                 <form action="">
-                                    <select class="text-bg-danger form-select" aria-label="Default select example">
+                                    <select className="text-bg-danger form-select" aria-label="Default select example">
                                         {cinema.map((value, index) => {
                                             return (index == 0 
-                                                ? <option className="text-bg-light" selected value={value.Name}>{value.Name}</option> 
-                                                : <option className="text-bg-light" value={value.Name}>{value.Name}</option>) 
+                                                ? <option key={index} className="text-bg-light" value={value.Name}>{value.Name}</option> 
+                                                : <option key={index} className="text-bg-light" value={value.Name}>{value.Name}</option>) 
                                         })}
                                     </select>
                                 </form>
