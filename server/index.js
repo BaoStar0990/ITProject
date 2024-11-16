@@ -7,6 +7,8 @@ const moviesRouter = require('./routes/homeRouter');
 const moviedetailRouter = require('./routes/movieDetailRouter');
 
 app.use(cors())
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/", homeRouter)
 app.use("/movies", moviesRouter)

@@ -4,7 +4,7 @@ import Footer from '../components/footer/Footer'
 import Copyright from '../components/copyright/Copyright'
 import MovieDescription from '../components/moviedetail/MovieDescription'
 
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link , useNavigate} from 'react-router-dom'
 
 import { useEffect, useState } from 'react'
 import axios from 'axios'
@@ -15,6 +15,7 @@ function MovieDetail(){
     const [time, setTime] = useState([])
 
     const {id} = useParams()
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`http://localhost:8000/moviedetail/${id}`)
@@ -46,6 +47,25 @@ function MovieDetail(){
             
         }
     }
+
+    const handleSubmit = (e, item) => {
+        e.preventDefault();
+    
+        axios
+          .post(`http://localhost:8000/moviedetail/${id}/order`, {
+            "showdate": item.ShowDate,
+            "showtime": item.ShowTime,
+            "showtimeid": item.ShowTimeID,
+            "room" : item.RoomID    
+        })
+          .then((response) => {
+            navigate('/moviedetail/8/order', { state: { data : response.data } });
+        })
+          .catch((error) => {
+            console.error('There was an error!', error);
+            setResponseMessage('There was an error submitting the form.');
+          });
+      };
     
     return(
         <>
@@ -75,7 +95,16 @@ function MovieDetail(){
                             ? time.map((item, index) => {
                                 return(
                                     <div className="d-flex flex-column justify-content-center align-items-center col-3">
-                                        <Link to="/movies/id_demo/order" className="btn btn-outline-danger">{`${item.ShowTime}`}</Link>
+                                        {/* <Link to="/moviedetail/id_demo/order" className="btn btn-outline-danger">{`${item.ShowTime}`}</Link> */}
+                                        {/* <form action={`/moviedetail/${id}/order`} method="post"> */}
+                                        <form onSubmit={e => handleSubmit(e, item)}>
+                                            <input type="hidden" name='showdate' value={item.ShowDate} />
+                                            <input type="hidden" name='showtime' value={item.ShowTime} />
+                                            <input type="hidden" name='showtimeid' value={item.ShowTimeID} />
+                                            <input type="hidden" name='room' value={item.RoomID} />
+                                            <input type="hidden" name='cinema' value={item.CinemaID} />
+                                            <input className="btn btn-outline-danger" type="submit" value={`${item.ShowTime}`} />
+                                        </form>
                                         <p>80 chỗ trống</p>
                                     </div>
                                 )

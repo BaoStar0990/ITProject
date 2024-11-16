@@ -5,12 +5,54 @@ import Copyright from '../components/copyright/Copyright'
 
 import './order.css'
 import { useState, useRef, useEffect } from 'react'
+import { useParams, Link, useLocation, redirect } from 'react-router-dom'
+import axios from 'axios'
 
 function Order(){
     const [chairs, setChairs] = useState([])
     const [price, setPrice] = useState(0)
+    const [data, setData] = useState([])
+    const [seat, setSeat] = useState()
+
+    const location = useLocation()
+    useEffect(() => {
+        setData(location.state.data[0])
+        setSeat(location.state.data[1])
+    }, [])
+    // console.log(data)
+    // console.log(seat)
 
     const sortAlphaNum = (a, b) => a.localeCompare(b, 'en', { numeric: true })
+
+    const SeatsID = (arr) => {
+        if(arr)
+        {
+            return arr.map(item => item.SeatID)
+        }
+    }
+
+
+    const MovieType = (arr) => {
+        if(arr){
+            return(arr.reduce((res, obj, index) => {
+                if(index < arr.length - 1 )
+                    return res + obj.type + ","
+                return res + obj.type
+            }, ""))
+        }
+    }
+    
+    const DuplicateMovie = (arr) => {
+        if(arr){
+            const unique = arr.filter((obj, index, array) => {
+                return (arr.findIndex((item) => {
+                    return item.MovieID === obj.MovieID
+                })) == index
+            });
+            return unique[0]
+            
+        }
+    }
 
     const DuplicateArray = (arr) => {
         return((arr.filter((item, index, array) => {
@@ -23,27 +65,32 @@ function Order(){
         {
             e.target.classList.add("chair-choosing")
             setChairs(chairs => DuplicateArray([...chairs, e.target.innerHTML]))
-            setPrice(price => price += 50000)
-            console.log(ChairArray())
+            let cost = seat.find((item) => {return item.SeatID == e.target.innerHTML}).Price
+            setPrice(price => price += cost)
             
         }
         else{
             e.target.classList.remove("chair-choosing")
             setChairs(chairs => chairs.filter((_, index) => index != chairs.indexOf(e.target.innerHTML)))
-            setPrice(price => price -= 50000)
+            let cost = seat.find((item) => {return item.SeatID == e.target.innerHTML}).Price
+            setPrice(price => price -= cost)
         }        
     }
 
-    const ChairArray = () => {
-        let array = [];
-        let letters = ["A", "B", "C", "D", "E", "F"];
-
-        for (let letter of letters) {
-            for (let i = 1; i <= 16; i++) {
-                array.push(letter + i);
-            }
+    const ChairArray = (arr) => {
+        if(arr){
+            return(arr.sort(sortAlphaNum))
         }
-        return array
+    }
+
+    const BookedChair = location.state.data[2].map(item => {return item.SeatID});
+
+
+    const FormatDate = (inp) => {
+        if(inp){
+            let date = new Date(inp.showdate)
+            return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`
+        }
     }
 
     return(
@@ -53,19 +100,23 @@ function Order(){
             <div className="container-fluid py-3 text-bg-dark my-5">
                 <div className="container" style={{"width" : "60%"}}>
                     <div className="row">
-                        <div className="col-md-4 text-center my-3">
-                            <img src="/movieposter/venom3.jpg" alt="poster" width="90%"/>
-                        </div>
-                        <div className="col-md-4 my-auto">
-                            <h3>Venom 3 : Kèo cuối</h3>
-                            <p><b>Thể loại : </b>Hài hước, Hành động</p>
-                            <p><b>Thời lượng : </b>120 phút</p>
-                        </div>
-                        <div className="col-md-4 my-auto">
-                            <p><b>Ngày chiếu : </b>24/12/2024</p>
-                            <p><b>Giờ chiếu : </b>11 : 30</p>
-                            <p><b>Phòng chiếu : </b>P5</p>
-                        </div>
+                        {DuplicateMovie(data) != null 
+                        ? <>
+                            <div className="col-md-4 text-center my-3">
+                                <img src={DuplicateMovie(data).movieposter} alt="poster" width="90%"/>
+                            </div>
+                            <div className="col-md-4 my-auto">
+                                <h3>{DuplicateMovie(data).moviename}</h3>
+                                <p><b>Thể loại : </b>{MovieType(data)}</p>
+                                <p><b>Thời lượng : </b>{DuplicateMovie(data).duration} phút</p>
+                            </div>
+                            <div className="col-md-4 my-auto">
+                                <p><b>Ngày chiếu : </b>{FormatDate(DuplicateMovie(data))}</p>
+                                <p><b>Giờ chiếu : </b>{DuplicateMovie(data).showtime}</p>
+                                <p><b>Phòng chiếu : </b>{DuplicateMovie(data).name}</p>
+                            </div>
+                        </>
+                        : <>Loading</>}
                     </div>
                 </div>
             </div>
@@ -73,18 +124,99 @@ function Order(){
                 <h2>Màn hình chiếu</h2>
             </div>
             <div className="container">
-                <div className="chairs-wrapper mx-auto">
-                    {ChairArray().map((value, index) => {
-                        if(Array.from(value)[1] == 4){
-                            return(<><button key={index} className='chair' id={value} onClick={Greeting} type='button'>{value}</button>
-                                <div style={{"width":"50px"}}></div>
-                                <div style={{"width":"50px"}}></div></>)
-                        }
-                        else{
-                            return(<><button className='chair' id={value} onClick={Greeting} type='button'>{value}</button></>)
-                        }
-                    })}
-                </div>
+                {seat && seat.length != 0 
+                ? <>
+                    {
+                        seat[0].Name.includes("I") 
+                        ? <div className="vip-chairs-wrapper mx-auto" id="chairList">
+                            {
+                                ChairArray(SeatsID(seat)).map((value, index) =>{
+                                    if(BookedChair.includes(value)){
+                                        if(Array.from(value)[1] == 2){
+                                            return(<>
+                                                <button disabled key={index} className='chair chair-chosen couple' id={value} onClick={Greeting} type='button'>{value}</button>
+                                                <div style={{"width":"50px"}}></div>
+                                                <div style={{"width":"50px"}}></div>
+                                            </>)
+                                        }
+                                        else
+                                            return(<button disabled key={index} className='chair chair-chosen couple' id={value} onClick={Greeting} type='button'>{value}</button>)
+                                    }
+                                    else{
+                                        if(Array.from(value)[1] == 2){
+                                            return(<>
+                                                <button key={index} className='chair couple' id={value} onClick={Greeting} type='button'>{value}</button>
+                                                <div style={{"width":"50px"}}></div>
+                                                <div style={{"width":"50px"}}></div>
+                                            </>)
+                                        }
+                                        else
+                                            return(<button key={index} className='chair couple' id={value} onClick={Greeting} type='button'>{value}</button>)
+                                    }
+                                    
+                                })
+                            }
+                        </div> 
+                        : <div className="chairs-wrapper mx-auto" id="chairList">
+                            {ChairArray(SeatsID(seat)).map((value, index) => {
+                            if(Array.from(value)[0] == "V"){
+                                if(BookedChair.includes(value)){
+                                    if(Array.from(value)[1] == 2){
+                                        return(<>
+                                                <button disabled key={index} className='chair chair-chosen couple' id={value} onClick={Greeting} type='button'>{value}</button>
+                                                <div style={{"width":"50px"}}></div>
+                                                <div style={{"width":"50px"}}></div>
+                                            </>)
+                                    }
+                                    else{
+                                        return(<button disabled key={index} className='chair chair-chosen couple' id={value} onClick={Greeting} type='button'>{value}</button>)
+                                    }
+                                }
+                                {
+                                    if(Array.from(value)[1] == 2){
+                                        return(<>
+                                                <button key={index} className='chair couple' id={value} onClick={Greeting} type='button'>{value}</button>
+                                                <div style={{"width":"50px"}}></div>
+                                                <div style={{"width":"50px"}}></div>
+                                            </>)
+                                    }
+                                    else{
+                                        return(<button key={index} className='chair couple' id={value} onClick={Greeting} type='button'>{value}</button>)
+                                    }
+                                }
+                            }
+                            else{
+                                if(BookedChair.includes(value)){
+                                    if(Array.from(value)[1] == 4){
+                                        return(<>
+                                                <button disabled key={index} className='chair chair-chosen' id={value} onClick={Greeting} type='button'>{value}</button>
+                                                <div style={{"width":"50px"}}></div>
+                                                <div style={{"width":"50px"}}></div>
+                                            </>)
+                                    }
+                                    else{
+                                        return(<button disabled key={index} className='chair chair-chosen' id={value} onClick={Greeting} type='button'>{value}</button>)
+                                    }
+                                }
+                                else{
+                                    if(Array.from(value)[1] == 4){
+                                        return(<>
+                                                <button key={index} className='chair' id={value} onClick={Greeting} type='button'>{value}</button>
+                                                <div style={{"width":"50px"}}></div>
+                                                <div style={{"width":"50px"}}></div>
+                                            </>)
+                                    }
+                                    else{
+                                        return(<button key={index} className='chair' id={value} onClick={Greeting} type='button'>{value}</button>)
+                                    }
+                                }
+                                
+                            }
+                        })}
+                        </div> 
+                    }
+                </>
+                : <>Empty</>}
             </div>
 
             <div className="container my-5" style={{"width":"75%"}}>
@@ -126,7 +258,8 @@ function Order(){
                                 <p>{price}</p>
                             </div>
                         </div>
-                        <button type='button' className='btn btn-danger'>Tiếp tục</button>
+                        {/* <button type='button' onClick={ChosenSeats} className='btn btn-danger'>Tiếp tục</button> */}
+                        <Link to="/moviedetail/8/confirm" state={{seats : chairs, movie : data, total : price}} className="btn btn-danger">Tiếp tục</Link>
                     </div>
                 </div>
             </div>

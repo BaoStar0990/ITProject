@@ -48,7 +48,7 @@ function MovieDescription()
                         <>
                             <div className="container-fluid text-center my-3 py-3 bg-dark">
                             <h1 className='text-center text-danger'>Trailer</h1>
-                            <iframe style={{"width":"80%"}} height="600px" className='' src={detail.Trailer} allowFullScreen allow="autoplay;"></iframe>
+                            <iframe width="80%" height="600px" src={detail.Trailer} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
                             </div>
                             <div className="container">
                                 <div className="row">
