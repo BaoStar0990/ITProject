@@ -6,10 +6,13 @@ import Copyright from '../components/copyright/Copyright'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
+import Cookies from "js-cookie"
+
 import axios from 'axios'
 
 function Confirm(){
     const [formData, setFormData] = useState({
+        userid : JSON.parse(Cookies.get("user")).userid,
         showtimeid : 0,
         movieid : 0,
         chairs : [],
@@ -17,7 +20,7 @@ function Confirm(){
         payment : ""
     })
 
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     const {id} = useParams()
 
     const location = useLocation()
@@ -27,7 +30,7 @@ function Confirm(){
     useEffect(() => {
         setFormData(formData =>  { return {...formData, showtimeid : movie[0].showtimeid, movieid : movie[0].movieid, chairs : seats, bill : total}})
     }, [])
-    console.log(formData)
+    // console.log(formData)
 
 
     const FormatDate = (inp) => {
@@ -54,11 +57,11 @@ function Confirm(){
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-          const response = await axios.post("http://localhost:8000/moviedetail/confirm", formData);
-          navigate(`/moviedetail/${id}/success`)
+            const response = await axios.post("http://localhost:8000/moviedetail/confirm", formData)
+            navigate(`/moviedetail/${id}/success`)
           
         } catch (error) {
-          console.error("There was an error submitting the form!", error);
+            console.error("There was an error submitting the form!", error);
         }
       };
 
@@ -84,10 +87,10 @@ function Confirm(){
                     </div>
                     <div className="col-md-6 mt-3 d-flex flex-column justify-content-center">
                         <div id='receipt'>
-                            <form onSubmit={handleSubmit} action="http://localhost:8000/moviedetail/confirm" method='post'>
+                            <form onSubmit={handleSubmit} method='post'>
                                 <h1 className='text-danger'><i className="fa-regular fa-clipboard"></i> Thông tin hóa đơn</h1>
-                                <p><b>Khách hàng : </b>CR7</p>
-                                <p><b>Email : </b>email@email</p>
+                                <p><b>Khách hàng : </b>{JSON.parse(Cookies.get("user")).user}</p>
+                                <p><b>Email : </b>{JSON.parse(Cookies.get("user")).email}</p>
                                 <label className='me-2' htmlFor="bill">Tổng hóa đơn</label>
                                 <input className='border border-0' type="text" name='bill' id='bill' defaultValue={total} readOnly/>
                                 <h1 className='text-danger'><i className="fa-solid fa-credit-card"></i> Phương thức thanh toán</h1>
@@ -116,7 +119,7 @@ function Confirm(){
                                     </label>
                                 </div> */}
                                 {/* <Link to="/moviedetail/8/success" className='btn btn-danger'>Xác nhận thanh toán</Link> */}
-                                <button id='confirm' className='btn btn-danger' type="submit">Xác nhận thanh toán</button>
+                                <input type="submit" id='confirm' className='btn btn-danger' value="Xác nhận thanh toán"/>
                             </form>
                         </div>
                         {/* <div id='qr' className='d-flex align-items-center flex-column d-none'>

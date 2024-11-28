@@ -1,14 +1,19 @@
 import logo from "../../assets/logo.png"
 import "./header.css"
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 
 import { useState, useEffect } from "react";
 import axios from 'axios'
+import Cookies from 'js-cookie';
 
 function Header(){
 
     const [data, setData] = useState([]);
     const [cinema, setCinema] = useState([]);
+    const [user, setUser] = useState()
+
+    const navigate = useNavigate()
+    
 
     useEffect(() => {
         axios.get("http://localhost:8000").then((res) => {
@@ -19,9 +24,26 @@ function Header(){
     }, [])
 
     const LogOut = () => {
-        sessionStorage.removeItem("user")
+        Cookies.remove("user")
         window.location.assign("/")
     }
+
+    const queryProfile = async (e) => {
+        e.preventDefault();
+        try {
+          const response = await axios.post(
+            'http://localhost:8000/profile',
+            { userId : JSON.parse(Cookies.get("user")).userid},
+            { withCredentials: true } // This allows cookies to be sent
+          );
+
+          console.log(response)
+          navigate('/profile', {state : {data : response.data}})
+
+        } catch (error) {
+          console.error('Error submitting form:', error.response?.data || error.message);
+        }
+      };
     
     return(
         <>
@@ -56,7 +78,7 @@ function Header(){
                                 </li>
                             </ul>
                             <div className="d-flex flex-column gap-1">
-                                <form action="">
+                                {/* <form action="">
                                     <select className="text-bg-danger form-select" aria-label="Default select example">
                                         {cinema.map((value, index) => {
                                             return (index == 0 
@@ -64,17 +86,20 @@ function Header(){
                                                 : <option key={index} className="text-bg-light" value={value.Name}>{value.Name}</option>) 
                                         })}
                                     </select>
-                                </form>
-                                {sessionStorage.getItem("user") 
+                                </form> */}
+                                {Cookies.get("user")
                                 ? 
-                                    <div className="btn-group">
-                                        <button type="button" className="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown">Xin chào, {JSON.parse(sessionStorage.getItem("user")).account}</button>
-                                    <ul className="dropdown-menu">
-                                        <li><a className="dropdown-item" href="#"><i className="fa-solid fa-user me-3"></i>Hồ sơ</a></li>
-                                        <li><a className="dropdown-item" href="#"><i className="fa-regular fa-gem me-3"></i>Điểm thành viên</a></li>
-                                        <li><hr className="dropdown-divider"/></li>
-                                        <li><button onClick={LogOut} type="button" className="dropdown-item"><i className="fa-solid fa-arrow-right-from-bracket me-3"></i>Đăng xuất</button></li>
-                                    </ul>
+                                    <div className="btn-group dropstart">
+                                        <div className="btn-group">
+                                            <button type="button" className="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown">Xin chào, {JSON.parse(Cookies.get("user")).user}</button>
+                                            <ul className="dropdown-menu">
+                                                {/* <li><Link className="dropdown-item" to="/profile"><i className="fa-solid fa-user me-3"></i>Hồ sơ</Link></li> */}
+                                                <li><button onClick={queryProfile} className="dropdown-item" to="/profile"><i className="fa-solid fa-user me-3"></i>Hồ sơ</button></li>
+                                                <li><a className="dropdown-item" href="#"><i className="fa-regular fa-gem me-3"></i>Điểm thành viên</a></li>
+                                                <li><hr className="dropdown-divider"/></li>
+                                                <li><button onClick={LogOut} type="button" className="dropdown-item"><i className="fa-solid fa-arrow-right-from-bracket me-3"></i>Đăng xuất</button></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 : <Link to="/signin" className="btn btn-danger">Đăng nhập/ Đăng ký</Link>}
                             </div>

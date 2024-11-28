@@ -2,24 +2,53 @@ var express = require('express');
 var router = express.Router();
 const usersController = require("../controllers/usersController")
 
-router.get('/', (req, res) => {
-    usersController.getAllUser((err, data) => {
-        res.render("../views/pages/users", {title : "User", users : data})
-    })
+router.post('/', async (req, res) => {
+    // console.log(req.body)
+
+    const {account, password, fullname, email, sex, date, number, action} = req.body
+
+    if(action == "signin"){
+        let data = []
+        const result1 = await new Promise((resolve, reject) => {
+            usersController.checkUserAvailable((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, account, password);
+        });
+
+        data = [...data, ...result1]
+        return(res.json(data))
+    }
+    else if(action == "signup"){
+        let data = []
+        await new Promise((resolve, reject) => {
+            usersController.addUser((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, account, password, fullname, email, sex, date, number);
+        });
+
+        const userID = await new Promise((resolve, reject) => {
+            usersController.getLatestUserID((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+
+        data = [...data, ...userID]
+        return(res.json(data))
+    }
+
+    // res.redirect("http://localhost:5173")
 });
-
-router.get("/add", (req, res) => {
-    res.render("../views/pages/users_add")
-})
-
-router.post("/add", (req, res) => {
-    usersController.addUser(req.body.email, req.body.firstname, req.body.lastname)
-    res.redirect("/users")
-})
-
-router.get("/delete/:id", (req, res) => {
-    usersController.deleteUser(req.params.id)
-    res.redirect("/users")
-})
 
 module.exports = router;

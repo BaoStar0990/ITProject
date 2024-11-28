@@ -5,7 +5,7 @@ import Copyright from '../components/copyright/Copyright'
 
 import './order.css'
 import { useState, useRef, useEffect } from 'react'
-import { useParams, Link, useLocation, redirect } from 'react-router-dom'
+import { useParams, Link, useLocation, redirect, Navigate, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 function Order(){
@@ -21,6 +21,7 @@ function Order(){
     }, [])
     // console.log(data)
     // console.log(seat)
+    const navigate = useNavigate();
 
     const sortAlphaNum = (a, b) => a.localeCompare(b, 'en', { numeric: true })
 
@@ -91,6 +92,18 @@ function Order(){
             let date = new Date(inp.showdate)
             return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`
         }
+    }
+
+    const ConfirmSeats = () => {
+        if(chairs.length == 0)
+        {
+            alert("Vui lòng chọn ít nhất một ghế")
+            return
+        }
+        else{
+            navigate("/moviedetail/8/confirm", {state : {seats : chairs, movie : data, total : price}})
+        }
+        
     }
 
     return(
@@ -258,8 +271,8 @@ function Order(){
                                 <p>{price}</p>
                             </div>
                         </div>
-                        {/* <button type='button' onClick={ChosenSeats} className='btn btn-danger'>Tiếp tục</button> */}
-                        <Link to="/moviedetail/8/confirm" state={{seats : chairs, movie : data, total : price}} className="btn btn-danger">Tiếp tục</Link>
+                        <button type='button' onClick={ConfirmSeats} className='btn btn-danger'>Tiếp tục</button>
+                        {/* <Link to="/moviedetail/8/confirm" state={{seats : chairs, movie : data, total : price}} className="btn btn-danger">Tiếp tục</Link> */}
                     </div>
                 </div>
             </div>

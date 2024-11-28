@@ -3,21 +3,92 @@ import logo from "../../assets/logo.png"
 import { useEffect, useState } from 'react'
 import { Form, Navigate, useNavigate } from "react-router-dom"
 
+import axios from "axios";
+import Cookies from "js-cookie";
+
+
 function SignInForm(){
     const [selectedRadio, setSelectedRadio] = useState("btnradio1");
-    const [formValue, setFormValue] = useState({"account" : "", "password" : ""})
+    const [signInForm, setSignInForm] = useState({"account" : "", "password" : "", action : "signin"})
+    const [signUpData, setSignUpData] = useState({
+        account: '',
+        password: '',
+        fullname: '',
+        email: '',
+        number: '',
+        sex: 'Nam',
+        date: '',
+        action: 'signup'
+      });
+
+    const updateSignUp = (e) => {
+        const { name, value } = e.target;
+        setSignUpData({ ...signUpData, [name]: value });
+    };
 
     const navigate = useNavigate()
 
-    const updateValue = (e) => {
-        setFormValue({...formValue, [e.target.name] : e.target.value})
+    const updateSignIn = (e) => {
+        setSignInForm({...signInForm, [e.target.name] : e.target.value})
     }
 
-    const SignInSession = (e) => {
-        console.log(formValue)
-        sessionStorage.setItem("user", JSON.stringify(formValue))
-        navigate("/")
-    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+          const response = await axios.post(
+            'http://localhost:8000/signin',
+            { ...signUpData},
+            { withCredentials: true } // This allows cookies to be sent
+          );
+
+          console.log(response)
+
+          Cookies.set("user", JSON.stringify({
+            userid : response.data[0].UserID,
+            user : signUpData.fullname,
+            number : signUpData.number,
+            email : signUpData.email,
+          }), { expires: 60 / 1440 });
+          navigate('/', {state : {data : response.data}})
+
+        } catch (error) {
+          console.error('Error submitting form:', error.response?.data || error.message);
+        }
+      };
+
+      const handleSignIn = async (e) => {
+        e.preventDefault();
+        if(signInForm.account === "admin" && signInForm.password === "admin"){
+            navigate("/admin")
+        }
+        else{
+            try {
+                const response = await axios.post(
+                  'http://localhost:8000/signin',
+                  { ...signInForm},
+                  { withCredentials: true } // This allows cookies to be sent
+                );
+      
+                console.log(response)
+                if(response.data.length == 0){
+                  alert("Tài khoản không tồn tại")
+                }
+                else{
+                  Cookies.set("user", JSON.stringify({
+                      userid : response.data[0].UserID,
+                      user : response.data[0].Fullname,
+                      phonenumber : response.data[0].PhoneNumber,
+                      email : response.data[0].Email
+                    }), { expires: 60 / 1440 });
+                    navigate('/', {state : {data : response.data}})
+                }
+      
+      
+              } catch (error) {
+                console.error('Error submitting form:', error.response?.data || error.message);
+              }
+        }
+      };
 
     return(
         <>
@@ -33,16 +104,17 @@ function SignInForm(){
 
                 {selectedRadio === "btnradio1"
                     ? <div className="d-flex justify-content-center">
-                        <form method="post" onSubmit={SignInSession} className="d-flex align-items-center flex-column p-3" style={{"width" : "50%"}}>
+                        <form method="post" onSubmit={handleSignIn} className="d-flex align-items-center flex-column p-3" style={{"width" : "50%"}}>
+                            <input type="hidden" name="action" value="signin" />
                             <div className="">
                                 <img src={logo} alt="logo" width="150px"/>
                             </div>
                             <div className="form-floating mb-3 mt-5" style={{"width" : "100%"}}>
-                                <input className="form-control" type="text" name="account" id="account" placeholder="account" onChange={updateValue}/>
+                                <input className="form-control" type="text" name="account" id="account" placeholder="account" onChange={updateSignIn}/>
                                 <label className="form-label" htmlFor="account">Account</label>
                             </div>
                             <div className="form-floating" style={{"width" : "100%"}}>
-                                <input className="form-control" type="password" name="password" id="password" placeholder="password" onChange={updateValue}/>
+                                <input className="form-control" type="password" name="password" id="password" placeholder="password" onChange={updateSignIn}/>
                                 <label className="form-label" htmlFor="password">Password</label>
                             </div>
                         
@@ -66,38 +138,39 @@ function SignInForm(){
                                 </div>
                             </div>
                             <div className="col-md-6">
-                                <form action="">
+                                <form onSubmit={handleSubmit}>
+                                    <input type="hidden" name="action" value="signup" />
                                     <div className="form-floating">
-                                        <input className="form-control" type="text" name="account" id="account" placeholder="account" />
+                                        <input className="form-control" type="text" name="account" id="account" placeholder="account" onChange={updateSignUp}/>
                                         <label htmlFor="account">Account</label>
                                     </div>
                                     <div className="form-floating">
-                                        <input className="form-control my-3" type="text" name="pasword" id="pasword" placeholder="pasword" />
-                                        <label htmlFor="pasword">Password</label>
+                                        <input className="form-control my-3" type="text" name="password" id="password" placeholder="password" onChange={updateSignUp}/>
+                                        <label htmlFor="password">Password</label>
                                     </div>
                                     <div className="form-floating">
-                                        <input className="form-control" type="text" name="fullname" id="fullname" placeholder="fullname" />
+                                        <input className="form-control" type="text" name="fullname" id="fullname" placeholder="fullname" onChange={updateSignUp}/>
                                         <label htmlFor="fullname">Full Name</label>
                                     </div>
                                     <div className="form-floating my-3">
-                                        <input className="form-control" type="email" name="email" id="email" placeholder="email" />
+                                        <input className="form-control" type="email" name="email" id="email" placeholder="email" onChange={updateSignUp}/>
                                         <label htmlFor="email">Email</label>
                                     </div>
                                     <div className="form-floating">
-                                        <input className="form-control" type="text" name="number" id="number" placeholder="number" />
+                                        <input className="form-control" type="text" name="number" id="number" placeholder="number" onChange={updateSignUp}/>
                                         <label htmlFor="number">Phone Number</label>
                                     </div>
                                     <div className="my-3 d-flex flex-column" style={{"width":"30%"}}>
                                         <label className="ms-1" htmlFor="date">Giới tính</label>
-                                        <select className="form-select" aria-label="Default select example">
-                                            <option value="1">Nam</option>
-                                            <option value="2">Nữ</option>
-                                            <option value="3">Khác</option>
+                                        <select name="sex" id="sex" className="form-select" aria-label="Default select example" onChange={updateSignUp}>
+                                            <option value="Nam">Nam</option>
+                                            <option value="Nữ">Nữ</option>
+                                            <option value="Khác">Khác</option>
                                         </select>
                                     </div>
                                     <div className="d-flex flex-column">
                                         <label className="ms-1" htmlFor="date">Ngày sinh</label>
-                                        <input className="p-2 rounded border border-0" type="date" name="date" id="date" />
+                                        <input className="p-2 rounded border border-0" type="date" name="date" id="date" onChange={updateSignUp}/>
                                     </div>
 
                                     

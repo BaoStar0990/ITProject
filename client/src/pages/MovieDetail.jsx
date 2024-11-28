@@ -56,7 +56,7 @@ function MovieDetail(){
             "showdate": item.ShowDate,
             "showtime": item.ShowTime,
             "showtimeid": item.ShowTimeID,
-            "room" : item.RoomID    
+            "room" : item.RoomID
         })
           .then((response) => {
             navigate('/moviedetail/8/order', { state: { data : response.data } });

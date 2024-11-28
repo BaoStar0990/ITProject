@@ -32,21 +32,21 @@ router.get("/", async (req, res) => {
             });
         });
 
-        const result3 = await new Promise((resolve, reject) => {
-            moviesController.getAllCinema((err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        });
+        // const result3 = await new Promise((resolve, reject) => {
+        //     moviesController.getAllCinema((err, result) => {
+        //         if (err) {
+        //             reject(err);
+        //         } else {
+        //             resolve(result);
+        //         }
+        //     });
+        // });
 
         // Combine data
         data1 = [...data1, ...result1];
         data2 = [...data2, ...result2];
-        data3 = [...data3, ...result3];
-        const data = [data1, data2, data3];
+        // data3 = [...data3, ...result3];
+        const data = [data1, data2];
         // Send response
         res.json(data);
     } catch (error) {

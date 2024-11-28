@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react'
 
 import { Link, Outlet } from 'react-router-dom';
 
+import Cookies from "js-cookie"
+
 
 function FilmList(){
 
@@ -34,9 +36,9 @@ function FilmList(){
 
     const ButtonAvailable = (date, id) => {
         return(!(new Date(date).getMonth() - new Date().getMonth()) 
-        ? (sessionStorage.getItem("user") 
-            ? <Link to={`/moviedetail/${id}`} className="btn btn-danger">Mua vé</Link>
-            : <Link to="/signin" className="btn btn-danger">Mua vé</Link>
+        ? (JSON.parse(Cookies.get("user") == undefined) 
+            ? <Link to="/signin" className="btn btn-danger">Mua vé</Link>
+            : <Link to={`/moviedetail/${id}`} className="btn btn-danger">Mua vé</Link>
             ) 
         : <Link to="/" className="btn btn-danger d-none">Mua vé</Link>)
     }
@@ -71,9 +73,14 @@ function FilmList(){
                         return(
                             <div className="col-xxl-3 col-xl-4 col-md-6" key={index}>
                                 <div className="card mx-auto" style={{"width": "15rem"}}>
-                                    <Link className="card-image-container" to={`/moviedetail/${film.MovieID}`}>
+                                    {JSON.parse(Cookies.get("user") == undefined)
+                                    ? <Link className="card-image-container" to={`/signin`}>
                                         <img src={film.MoviePoster} className="card-img-top" alt="poster" width="200px"/>
                                     </Link>
+                                    : <Link className="card-image-container" to={`/moviedetail/${film.MovieID}`}>
+                                        <img src={film.MoviePoster} className="card-img-top" alt="poster" width="200px"/>
+                                    </Link>
+                                    }
                                     <div className="card-body d-flex flex-column justify-content-between" style={{"height":"200px"}}>
                                         <div>
                                             <h5 className="card-title text-danger">{film.MovieName}</h5>

@@ -56,4 +56,35 @@ module.exports = {
             }
         })
     },
+    insertOrder : (callback, userid, showtimeid, date, payment, time, quantity, total) => {
+        db.query("insert into Orders(userid, showtimeid, orderdate, ordertime, paymentid, quantity, total) values (?, ?, ?, ?, ?, ?, ?);", [userid, showtimeid, date, time, payment, quantity, total], (err, result) => {
+            if(err){
+                throw err
+            }
+            else{
+                callback(null)
+            }
+        })
+    },
+    insertOrderDetail : (callback, orderid, seatid) => {
+        db.query("insert into OrderDetail(OrderID, SeatID) values (?, ?);", [orderid, seatid], (err) => {
+            if(err){
+                throw err
+            }
+            else{
+                callback(null)
+            }
+        })
+    },
+    getLatestOrderId : (callback) => {
+        db.query("select MAX(orderid) AS MaxOrderId from Orders order by orderid;", (err, result) => {
+            if(err){
+                throw err
+            }
+            else{
+                const data = result.map(row => row)
+                callback(null, data)
+            }
+        })
+    },
 }

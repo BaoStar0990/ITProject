@@ -100,8 +100,53 @@ router.post("/:id/order", async (req, res) => {
 })
 
 router.post("/confirm", async (req, res) => {
+    // const bill = 10000
+
+    const {showtimeid, chairs, bill, payment, userid} = req.body;
     console.log(req.body)
-    // return res.json(req.body)
+    let paymentid = 0;
+
+    if(payment == "ZaloPay")
+        paymentid = 2
+    else if(payment == "MoMo")
+        paymentid = 1
+    await new Promise((resolve, reject) => {
+        movieDetailController.insertOrder((err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        }, userid, showtimeid, `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`, `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`, paymentid, chairs.length, bill);
+    });
+
+    const result1 = await new Promise((resolve, reject) => {
+        movieDetailController.getLatestOrderId((err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    for (let seatid of chairs){
+        await new Promise((resolve, reject) => {
+            movieDetailController.insertOrderDetail((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, result1[0].MaxOrderId, seatid);
+        });
+    }
+    // data1 = [...data1, ...result1]
+
+    // const data = [data1]
+    // console.log(result1[0].MaxOrderId + 1)
+
+    return res.json(req.body)
 
 
     // //https://developers.momo.vn/#/docs/en/aiov2/?id=payment-method
@@ -110,8 +155,9 @@ router.post("/confirm", async (req, res) => {
     // var secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
     // var orderInfo = 'Mylta Cinema';
     // var partnerCode = 'MOMO';
-    // var redirectUrl = 'https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b';
-    // var ipnUrl = 'https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b';
+    // var redirectUrl = 'http://localhost:5173/moviedetail/8/success';
+    // // var ipnUrl = 'https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b';
+    // var ipnUrl = 'http://localhost:5173/moviedetail/8/success';
     // var requestType = "payWithMethod";
     // var amount = bill;
     // var orderId = partnerCode + new Date().getTime();
