@@ -14,7 +14,23 @@ function Admin_Order(){
           .catch(err => console.log(err))
     }, [])
 
-    console.log(orders)
+    const DuplicateOrder = () => {
+        if(orders)
+        {
+            return orders.filter((item, index, arr) => {
+                return (index === arr.findIndex(obj => {
+                    return(obj.orderid == item.orderid)
+                }))
+            })
+        }
+    }
+
+    const OrderSeats = (id) => {
+        if(orders){
+            return orders.filter(item =>{return item.orderid === id}).map(item => {return item.seatid}).join(", ")
+        }
+    }
+
 
     const DateFormat = (date) => {
         let res = ""
@@ -51,6 +67,7 @@ function Admin_Order(){
                                 <th>Ngày đặt</th>
                                 <th>Giờ đặt</th>
                                 <th>Khách hàng</th>
+                                <th>Ghế đặt</th>
                                 <th>Số lượng</th>
                                 <th>Phương thức thanh toán</th>
                             </tr>
@@ -58,18 +75,22 @@ function Admin_Order(){
                         <tbody className="table-group-divider">
                             {orders.length !=0 
                             ? <>
-                                {orders.map((item) => {
+                                {DuplicateOrder().map((item) => {
                                     return(
                                         <>
                                             <tr>
                                                 <td className="d-flex gap-2">
-                                                    <button className="p-1 rounded bg-warning"><i className="fa-solid fa-wrench"></i></button>
-                                                    <button className="p-1 rounded bg-danger"><i className="fa-solid fa-trash"></i></button>
+                                                    <form method="post" action="http://localhost:8000/admin/order">
+                                                        <input type="hidden" name="orderid" value={item.orderid} />
+                                                        <input type="hidden" name="action" value="delete_order" />
+                                                        <button className="p-1 rounded bg-danger"><i className="fa-solid fa-trash"></i></button>
+                                                    </form>
                                                 </td>
                                                 <td>{item.orderid}</td>
                                                 <td>{DateFormat(item.orderdate)}</td>
                                                 <td>{item.ordertime}</td>
                                                 <td>{item.fullname}</td>
+                                                <td>{OrderSeats(item.orderid)}</td>
                                                 <td>{item.quantity}</td>
                                                 <td>{item.paymentname}</td>
                                             </tr>

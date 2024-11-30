@@ -57,7 +57,7 @@ function Confirm(){
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8000/moviedetail/confirm", formData)
+            const response = await axios.post(`http://localhost:8000/moviedetail/${id}/confirm`, formData)
             navigate(`/moviedetail/${id}/success`)
           
         } catch (error) {
@@ -87,7 +87,7 @@ function Confirm(){
                     </div>
                     <div className="col-md-6 mt-3 d-flex flex-column justify-content-center">
                         <div id='receipt'>
-                            <form onSubmit={handleSubmit} method='post'>
+                            <form onSubmit={handleSubmit}>
                                 <h1 className='text-danger'><i className="fa-regular fa-clipboard"></i> Thông tin hóa đơn</h1>
                                 <p><b>Khách hàng : </b>{JSON.parse(Cookies.get("user")).user}</p>
                                 <p><b>Email : </b>{JSON.parse(Cookies.get("user")).email}</p>

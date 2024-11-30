@@ -114,6 +114,27 @@ module.exports = {
             callback(null)
         }, id
     )},
+    deleteMovie : (callback, id) => {
+        adminModel.deleteMovie((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, id
+    )},
+    updateMovie : (callback, id, name , open, close) => {
+        adminModel.updateMovie((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, id, name , open, close
+    )},
+    updateMovieDetail : (callback, id, poster, description, director, duration, language, subtitle, trailer) => {
+        adminModel.updateMovieDetail((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, id, poster, description, director, duration, language, subtitle, trailer
+    )},
     
 
 
@@ -145,6 +166,91 @@ module.exports = {
             callback(null, data)
         })
     },
+    addRoomType : (callback, type) => {
+        adminModel.addRoomType((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, type
+    )},
+    updateRoomType : (callback, id, type) => {
+        adminModel.updateRoomType((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, id, type
+    )},
+    deleteRoomType : (callback, id) => {
+        adminModel.deleteRoomType((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, id
+    )},
+    addSeatType : (callback, type, price) => {
+        adminModel.addSeatType((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, type, price
+    )},
+    updateSeatType : (callback, id, type, price) => {
+        adminModel.updateSeatType((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, id, type, price
+    )},
+    deleteSeatType : (callback, id) => {
+        adminModel.deleteSeatType((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, id
+    )},
+    deleteRoom : (callback, id) => {
+        adminModel.deleteRoom((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, id
+    )},
+    addRoom : (callback, name, typeid, capacity) => {
+        adminModel.addRoom((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, name, typeid, capacity
+    )},
+    addSeat : (callback, seatid, seattypeid, roomid) => {
+        adminModel.addSeat((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, seatid, seattypeid, roomid
+    )},
+    getLastRoomID : (callback) => {
+        adminModel.getLastRoomID((err, data) => {
+            if(err)
+                throw err
+            callback(null, data)
+        })
+    },
+    updateRoom : (callback, id, name, type) => {
+        adminModel.updateRoom((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, id, name, type
+    )},
+    deleteSeat : (callback, seat, room) => {
+        adminModel.deleteSeat((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, seat, room
+    )},
+
 
     getAllShowTime : (callback) => {
         adminModel.getAllShowTime((err, data) => {
@@ -153,6 +259,28 @@ module.exports = {
             callback(null, data)
         })
     },
+    addShowTime : (callback, date, time, movieid, roomid) => {
+        adminModel.addShowTime((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, date, time, movieid, roomid
+    )},
+    updateShowTime : (callback, id, date, time, movieid, roomid) => {
+        adminModel.updateShowTime((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, id, date, time, movieid, roomid
+    )},
+    deleteShowTime : (callback, id) => {
+        adminModel.deleteShowTime((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, id
+    )},
+
 
     getAllOrders : (callback) => {
         adminModel.getAllOrders((err, data) => {
@@ -160,5 +288,12 @@ module.exports = {
                 throw err
             callback(null, data)
         })
-    }
+    },
+    deleteOrder : (callback, id) => {
+        adminModel.deleteOrder((err) => {
+            if(err)
+                throw err
+            callback(null)
+        }, id
+    )},
 }

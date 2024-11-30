@@ -71,7 +71,8 @@ function Header(){
                                     <Link to="/ticket" className="nav-link text-center">Giá vé</Link>
                                 </li>
                                 <li className="nav-item fw-semibold">
-                                    <a href="#" className="nav-link text-center">Tin tức</a>
+                                    {/* <a href="#" className="nav-link text-center">Tin tức</a> */}
+                                    <Link to="/news" className="nav-link text-center">Tin tức</Link>
                                 </li>
                                 <li className="nav-item fw-semibold">
                                     <a href="#" className="nav-link text-center">Thành viên</a>

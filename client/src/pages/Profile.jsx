@@ -15,8 +15,21 @@ function Profile(){
     useEffect(() => {
         setUserInfo(location.state.data[0][0])
         setMovieOrder(location.state.data[1])
-    }, [])
+        setSex(userInfo.Sex)
+    }, [userInfo.Sex])
 
+    const setSex = (sex) => {
+        // if(userInfo){
+            for(let x of document.getElementById("sex").childNodes){
+                if(x.value == sex){
+                    x.selected = true
+                }
+                else{
+                    x.selected = false
+                }
+            }
+        // }
+    }
 
     console.log(userInfo)
 

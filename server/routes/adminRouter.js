@@ -193,6 +193,16 @@ router.post("/movie", async (req, res) => {
         }
     }
     else if(req.body.action === "delete_detail"){
+        const movietype = await new Promise((resolve, reject) => {
+            adminController.getMovieTypeID((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.detail_type);
+        });
+
         await new Promise((resolve, reject) => {
             adminController.deleteMovieDetail((err, result) => {
                 if (err) {
@@ -200,8 +210,85 @@ router.post("/movie", async (req, res) => {
                 } else {
                     resolve(result);
                 }
-            }, req.body.detailid);
+            }, movietype[0].MovieTypeID);
         });
+    }
+    else if(req.body.action === "delete_movie"){
+        await new Promise((resolve, reject) => {
+            adminController.deleteMovie((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.movieid);
+        });
+    }
+    else if(req.body.action === "edit_movie"){
+        await new Promise((resolve, reject) => {
+            adminController.updateMovie((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.movieid, req.body.name, req.body.start_date, req.body.end_date);
+        });
+        await new Promise((resolve, reject) => {
+            adminController.updateMovieDetail((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.movieid, req.body.poster, req.body.description, req.body.directors, req.body.duration, req.body.language, req.body.subtitle, req.body.trailer);
+        });
+        if(Array.isArray(req.body.type)){
+            for(let type of req.body.type){
+                const movietypeid = await new Promise((resolve, reject) => {
+                    adminController.getMovieTypeID((err, result) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    }, type);
+                });
+                console.log(movietypeid)
+    
+                await new Promise((resolve, reject) => {
+                    adminController.addMovieDetail((err, result) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    }, req.body.movieid, req.body.poster, req.body.description, req.body.directors, movietypeid[0].MovieTypeID, req.body.duration, req.body.language, req.body.subtitle, req.body.trailer);
+                });
+            }
+        }
+        else if(req.body.type){
+            const movietypeid = await new Promise((resolve, reject) => {
+                adminController.getMovieTypeID((err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }, req.body.type);
+            });
+            console.log(movietypeid)
+
+            await new Promise((resolve, reject) => {
+                adminController.addMovieDetail((err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }, req.body.movieid, req.body.poster, req.body.description, req.body.directors, movietypeid[0].MovieTypeID, req.body.duration, req.body.language, req.body.subtitle, req.body.trailer);
+            });
+        }
     }
     res.redirect("http://localhost:5173/admin/movie")
 })
@@ -259,10 +346,178 @@ router.get("/room", async (req, res) => {
     return res.json(data)
 })
 
+router.post("/room", async (req, res) => {
+    console.log(req.body)
+
+    if(req.body.action === "add_roomtype"){
+        await new Promise((resolve, reject) => {
+            adminController.addRoomType((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.name);
+        });
+    }
+    else if(req.body.action === "edit_roomtype"){
+        await new Promise((resolve, reject) => {
+            adminController.updateRoomType((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.roomtypeid, req.body.type);
+        });
+    }
+    else if(req.body.action === "delete_roomtype"){
+        await new Promise((resolve, reject) => {
+            adminController.deleteRoomType((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.roomtypeid);
+        });
+    }
+    else if(req.body.action === "add_seattype"){
+        await new Promise((resolve, reject) => {
+            adminController.addSeatType((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.seattype, req.body.seatprice);
+        });
+    }
+    else if(req.body.action === "edit_seattype"){
+        await new Promise((resolve, reject) => {
+            adminController.updateSeatType((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.seattypeid, req.body.type, req.body.price);
+        });
+    }
+    else if(req.body.action === "delete_seattype"){
+        await new Promise((resolve, reject) => {
+            adminController.deleteSeatType((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.seattypeid);
+        });
+    }
+    else if(req.body.action === "delete_room"){
+        await new Promise((resolve, reject) => {
+            adminController.deleteRoom((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.roomid);
+        });
+    }
+    else if(req.body.action === "add_room"){
+        let letters = "ABCDEFGHIJKLMNOPQRSTU"
+
+        await new Promise((resolve, reject) => {
+            adminController.addRoom((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.room, req.body.roomtype, req.body.capacity);
+        });
+
+        const roomid = await new Promise((resolve, reject) => {
+            adminController.getLastRoomID((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+
+        console.log(roomid)
+
+        let seats = []
+        for(let x of letters.slice(0, req.body.normalSeats)){
+            for(let i = 1; i<= 16; i++){
+                seats.push(x + i)
+            }
+        }
+        for(let i = 1; i<= req.body.vipSeats; i++){
+            seats.push("V" + i)
+        }
+
+        console.log(seats)
+
+        for(let x of seats){
+            if(x[0] == "V")
+                await new Promise((resolve, reject) => {
+                    adminController.addSeat((err, result) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    }, x, 2, roomid[0].roomid);
+                });
+            else{
+                await new Promise((resolve, reject) => {
+                    adminController.addSeat((err, result) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    }, x, 1, roomid[0].roomid);
+                });
+            }
+        }
+    }
+    else if(req.body.action == "edit_room"){
+        await new Promise((resolve, reject) => {
+            adminController.updateRoom((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.roomid, req.body.room, req.body.roomtype);
+        });
+    }
+    else if(req.body.action == "delete_seat"){
+        await new Promise((resolve, reject) => {
+            adminController.deleteSeat((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.seatid, req.body.roomid);
+        });
+    }
+
+
+    res.redirect("http://localhost:5173/admin/room")
+})
+
 router.get("/showtime", async (req, res) => {
     let data1 = []
-    // let data2 = []
-    // let data3 = []
+    let data2 = []
+    let data3 = []
     // let data4 = []
     const showtime = await new Promise((resolve, reject) => {
         adminController.getAllShowTime((err, result) => {
@@ -274,25 +529,25 @@ router.get("/showtime", async (req, res) => {
         });
     });
 
-    // const rooms = await new Promise((resolve, reject) => {
-    //     adminController.getAllRooms((err, result) => {
-    //         if (err) {
-    //             reject(err);
-    //         } else {
-    //             resolve(result);
-    //         }
-    //     });
-    // });
+    const rooms = await new Promise((resolve, reject) => {
+        adminController.getAllRooms((err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
 
-    // const seattype = await new Promise((resolve, reject) => {
-    //     adminController.getSeatType((err, result) => {
-    //         if (err) {
-    //             reject(err);
-    //         } else {
-    //             resolve(result);
-    //         }
-    //     });
-    // });
+    const movie = await new Promise((resolve, reject) => {
+        adminController.getAllMovies((err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
 
     // const seats = await new Promise((resolve, reject) => {
     //     adminController.getAllSeats((err, result) => {
@@ -305,12 +560,51 @@ router.get("/showtime", async (req, res) => {
     // });
 
     data1 = [...data1, ...showtime]
-    // data2 = [...data2, ...rooms]
-    // data3 = [...data3, ...seattype]
+    data2 = [...data2, ...rooms]
+    data3 = [...data3, ...movie]
     // data4 = [...data4, ...seats]
-    // const data = [data1, data2, data3, data4]
-    const data = [data1]
+    const data = [data1, data2, data3]
+    // const data = [data1]
     return res.json(data)
+})
+
+router.post("/showtime", async (req, res) => {
+    console.log(req.body)
+    if(req.body.action === "add_showtime"){
+        await new Promise((resolve, reject) => {
+            adminController.addShowTime((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.start_date, req.body.end_date, req.body.movie, req.body.room);
+        });
+    }
+    else if(req.body.action === "edit_showtime"){
+        await new Promise((resolve, reject) => {
+            adminController.updateShowTime((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.showid, req.body.start_date, req.body.end_date, req.body.movie, req.body.room);
+        });
+    }
+    else if(req.body.action === "delete_show"){
+        await new Promise((resolve, reject) => {
+            adminController.deleteShowTime((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, req.body.showid);
+        });
+    }
+
+    res.redirect("http://localhost:5173/admin/showtime")
 })
 
 router.get("/order", async (req, res) => {
@@ -365,6 +659,20 @@ router.get("/order", async (req, res) => {
     // const data = [data1, data2, data3, data4]
     const data = [data1]
     return res.json(data)
+})
+
+router.post("/order", async (req, res) => {
+    await new Promise((resolve, reject) => {
+        adminController.deleteOrder((err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        }, req.body.orderid);
+    });
+
+    res.redirect("http://localhost:5173/admin/order")
 })
 
 module.exports = router

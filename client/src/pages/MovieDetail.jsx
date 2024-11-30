@@ -50,6 +50,7 @@ function MovieDetail(){
 
     const handleSubmit = (e, item) => {
         e.preventDefault();
+        console.log(id)
     
         axios
           .post(`http://localhost:8000/moviedetail/${id}/order`, {
@@ -59,7 +60,7 @@ function MovieDetail(){
             "room" : item.RoomID
         })
           .then((response) => {
-            navigate('/moviedetail/8/order', { state: { data : response.data } });
+            navigate(`/moviedetail/${id}/order`, { state: { data : response.data } });
         })
           .catch((error) => {
             console.error('There was an error!', error);
@@ -95,8 +96,6 @@ function MovieDetail(){
                             ? time.map((item, index) => {
                                 return(
                                     <div className="d-flex flex-column justify-content-center align-items-center col-3">
-                                        {/* <Link to="/moviedetail/id_demo/order" className="btn btn-outline-danger">{`${item.ShowTime}`}</Link> */}
-                                        {/* <form action={`/moviedetail/${id}/order`} method="post"> */}
                                         <form onSubmit={e => handleSubmit(e, item)}>
                                             <input type="hidden" name='showdate' value={item.ShowDate} />
                                             <input type="hidden" name='showtime' value={item.ShowTime} />

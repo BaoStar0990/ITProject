@@ -17,9 +17,8 @@ function Footer(){
                     
 
                     <div className="mb-5 d-flex flex-column">
-                        <a className="text-light text-decoration-none fs-5" href="#">Giới thiệu</a>
-                        <a className="text-light text-decoration-none fs-5" href="#">Hệ thống rạp</a>
-                        <a className="text-light text-decoration-none fs-5" href="#">Liên hệ</a>
+                        <a className="text-light text-decoration-none fs-5" href="/introduction">Giới thiệu</a>
+                        <a className="text-light text-decoration-none fs-5" href="tel:0982857656">Liên hệ</a>
                     </div>
 
                     <img className="mb-3 mx-auto" src={confirm} alt="logo" width="200px"/>
@@ -51,7 +50,7 @@ function Footer(){
                         ngày sau (bao gồm Lễ, Tết)</p>
                         <p className="text-light text-decoration-none fs-5 mb-0"><b>Email hỗ trợ: </b>
                         email@gmail.com</p>
-                        <p className="text-light text-decoration-none fs-5">Hotline: 19001900</p>
+                        <p className="text-light text-decoration-none fs-5">Hotline: 1900 1900</p>
                     </div>
                 </div>
 

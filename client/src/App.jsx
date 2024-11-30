@@ -19,6 +19,7 @@ import Admin_Movie from './pages/admin/Admin_Movie'
 import Admin_Order from './pages/admin/Admin_Order'
 import Admin_Showtime from './pages/admin/Admin_Showtime'
 import Admin_Room from './pages/admin/Admin_Room'
+import News from './pages/News'
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
               <Route path="/" element={<Home/>}></Route>
               <Route path='/introduction' element={<Introduction/>}></Route>
               <Route path='/ticket' element={<TicketPrice/>}></Route>
+              <Route path='/news' element={<News/>}></Route>
               <Route path='/signin' element={<SignIn/>}></Route>
               <Route path='/movies' element={<Movies/>}></Route>
               <Route path='/moviedetail/:id' element={<MovieDetail/>}></Route>

@@ -14,6 +14,8 @@ function Order(){
     const [data, setData] = useState([])
     const [seat, setSeat] = useState()
 
+    const {id} = useParams()
+
     const location = useLocation()
     useEffect(() => {
         setData(location.state.data[0])
@@ -101,7 +103,7 @@ function Order(){
             return
         }
         else{
-            navigate("/moviedetail/8/confirm", {state : {seats : chairs, movie : data, total : price}})
+            navigate(`/moviedetail/${id}/confirm`, {state : {seats : chairs, movie : data, total : price}})
         }
         
     }

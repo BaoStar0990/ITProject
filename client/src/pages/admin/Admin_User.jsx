@@ -5,6 +5,7 @@ import axios from "axios"
 
 const ChangeAdd = (val) => {
     if(val === "Thêm khách hàng" || val === "user"){
+
         document.getElementById("addCategoryModalLabel").innerHTML = "Thêm khách hàng"
         document.getElementById("editModalLabel").innerHTML = "Thêm khách hàng"
 
@@ -173,69 +174,6 @@ function Admin_User(){
                                                             <button onClick={(e) => getFields(e, item.UserID, item.Login, item.Password, item.Fullname, item.Email, item.Sex, DateFormat(item.DOB), item.PhoneNumber, item.staffType, item.salary)} 
                                                             className="employee p-1 rounded bg-warning" data-bs-toggle="modal" data-bs-target="#editModal"><i className="employee fa-solid fa-wrench"></i></button>
 
-                                                            <div class="modal fade fw-medium" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-                                                                <div class="modal-dialog">
-                                                                    <div class="modal-content">
-                                                                        <form action="http://localhost:8000/admin/user" method="post">
-                                                                            <input type="hidden" name="action" value="edit"/>
-                                                                            <input type="hidden" id="editUserid" name="userid" value=""/>
-                                                                            <div class="modal-header">
-                                                                            <h5 class="modal-title fw-semibold" id="editModalLabel">Sửa nhân viên</h5>
-                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                            </div>
-                                                                            
-                                                                            <div class="modal-body">
-                                                                            <div class="mb-3">
-                                                                                <label for="editStaffAccount" class="form-label">Tài khoản</label>
-                                                                                <input type="text" class="form-control" id="editStaffAccount" name="account" required/>
-                                                                            </div>
-                                                                            <div class="mb-3">
-                                                                                <label for="editStaffPassword" class="form-label">Mật khẩu</label>
-                                                                                <input type="text" class="form-control" id="editStaffPassword" name="password" required/>
-                                                                            </div>
-                                                                            <div class="mb-3">
-                                                                                <label for="editStaffFullname" class="form-label">Họ tên</label>
-                                                                                <input type="text" class="form-control" id="editStaffFullname" name="fullname" required/>
-                                                                            </div>
-                                                                            <div class="mb-3">
-                                                                                <label for="editStaffEmail" class="form-label">Email</label>
-                                                                                <input type="email" class="form-control" id="editStaffEmail" name="email" required/>
-                                                                            </div>
-                                                                            <div class="mb-3">
-                                                                                <label className="ms-1" htmlFor="editStaffSex">Giới tính</label>
-                                                                                <select name="sex" id="editStaffSex" className="form-select" aria-label="Default select example">
-                                                                                    <option value="Nam">Nam</option>
-                                                                                    <option value="Nữ">Nữ</option>
-                                                                                    <option value="Khác">Khác</option>
-                                                                                </select>
-                                                                            </div>
-                                                                            <div class="mb-3">
-                                                                                <label for="editStaffDoB" class="form-label">Ngày sinh</label>
-                                                                                <input type="date" class="form-control" id="editStaffDoB" name="dob" required/>
-                                                                            </div>
-                                                                            <div class="mb-3">
-                                                                                <label for="editStaffPhone" class="form-label">SĐT</label>
-                                                                                <input type="tel" class="form-control" id="editStaffPhone" name="phone" required/>
-                                                                            </div>
-                                                                            <div class="mb-3">
-                                                                                <label for="editStaffRole" class="form-label">Vai trò</label>
-                                                                                <input type="text" class="form-control" id="editStaffRole" name="role"/>
-                                                                            </div>
-                                                                            <div class="mb-3">
-                                                                                <label for="editStaffSalary" class="form-label">Lương</label>
-                                                                                <input type="text" class="form-control" id="editStaffSalary" name="salary"/>
-                                                                            </div>
-
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                                <button type="submit" class="btn btn-danger">Save</button>
-                                                                            </div>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
                                                             <form method="post" action="http://localhost:8000/admin/user">
                                                                 <input type="hidden" name="userid" value={item.UserID} />
                                                                 <input type="hidden" name="action" value="delete" />
@@ -322,6 +260,69 @@ function Admin_User(){
                             </table>
                         </div>
                         
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade fw-medium" id="editModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="http://localhost:8000/admin/user" method="post">
+                            <input type="hidden" name="action" value="edit"/>
+                            <input type="hidden" id="editUserid" name="userid" value=""/>
+                            <div class="modal-header">
+                            <h5 class="modal-title fw-semibold" id="editModalLabel">Sửa nhân viên</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            
+                            <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="editStaffAccount" class="form-label">Tài khoản</label>
+                                <input type="text" class="form-control" id="editStaffAccount" name="account" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editStaffPassword" class="form-label">Mật khẩu</label>
+                                <input type="text" class="form-control" id="editStaffPassword" name="password" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editStaffFullname" class="form-label">Họ tên</label>
+                                <input type="text" class="form-control" id="editStaffFullname" name="fullname" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editStaffEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="editStaffEmail" name="email" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label className="ms-1" htmlFor="editStaffSex">Giới tính</label>
+                                <select name="sex" id="editStaffSex" className="form-select" aria-label="Default select example">
+                                    <option value="Nam">Nam</option>
+                                    <option value="Nữ">Nữ</option>
+                                    <option value="Khác">Khác</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editStaffDoB" class="form-label">Ngày sinh</label>
+                                <input type="date" class="form-control" id="editStaffDoB" name="dob" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editStaffPhone" class="form-label">SĐT</label>
+                                <input type="tel" class="form-control" id="editStaffPhone" name="phone" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editStaffRole" class="form-label">Vai trò</label>
+                                <input type="text" class="form-control" id="editStaffRole" name="role"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editStaffSalary" class="form-label">Lương</label>
+                                <input type="text" class="form-control" id="editStaffSalary" name="salary"/>
+                            </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Save</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
