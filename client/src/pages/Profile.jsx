@@ -97,11 +97,13 @@ function Profile(){
 
                 {selectedRadio == "btnradio1"
                 ? <>
-                    <form action="#">
+                    <form action="http://localhost:8000/profile" method="post">
+                        <input type="hidden" name="action" value="update_profile"/>
+                        <input type="hidden" name="id" value={userInfo.UserID}/>
                         <div className="row">
                             <div className="col-md-6">
                                 <div className="form-floating mb-3">
-                                    <input type="fullname" className="form-control" id="fullname" placeholder="fullname" value={userInfo.Fullname}/>
+                                    <input name="fullname" type="text" className="form-control" id="fullname" placeholder="FullName" value={userInfo.Fullname}/>
                                     <label for="fullname">Họ tên</label>
                                 </div>
 
@@ -122,7 +124,7 @@ function Profile(){
 
                             <div className="col-md-6">
                                 <div className="form-floating">
-                                    <input type="email" className="form-control" id="email" placeholder="email" value={userInfo.Email}/>
+                                    <input name="email" type="email" className="form-control" id="email" placeholder="email" value={userInfo.Email}/>
                                     <label for="email">Email</label>
                                 </div>
 

@@ -24,7 +24,7 @@ module.exports = {
         })
     },
     getAllUpcomingMovies : (callback) => {
-        db.query("Select * from movie m inner join moviedetail md on m.movieid = md.movieid inner join movietype mt on md.movietypeid = mt.movietypeid where year(m.Movie_OpenTime) = year(current_date()) and (month(m.Movie_OpenTime) - month(current_date()) = 1) and (year(m.Movie_OpenTime) - year(current_date()) = 0)", (err, result) => {
+        db.query("Select * from movie m inner join moviedetail md on m.movieid = md.movieid inner join movietype mt on md.movietypeid = mt.movietypeid where (year(m.Movie_OpenTime) != year(current_date())) or (year(m.Movie_OpenTime) = year(current_date()) and (month(m.Movie_OpenTime) - month(current_date()) = 1) and (year(m.Movie_OpenTime) - year(current_date()) = 0));", (err, result) => {
             if(err){
                 throw err
             }

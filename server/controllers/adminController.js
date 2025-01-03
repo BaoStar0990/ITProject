@@ -296,4 +296,40 @@ module.exports = {
             callback(null)
         }, id
     )},
+
+    getUserCount : (callback) => {
+        adminModel.getUserCount((err, data) => {
+            if(err)
+                throw err
+            callback(null, data)
+        })
+    },
+    getHoursOrder : (callback) => {
+        adminModel.getHoursOrder((err, data) => {
+            if(err)
+                throw err
+            callback(null, data)
+        })
+    },
+    // getOrderCount : (callback) => {
+    //     adminModel.getAllOrder((err, data) => {
+    //         if(err)
+    //             throw err
+    //         callback(null, data)
+    //     })
+    // },
+    getDescOrder : (callback) => {
+        adminModel.getDescOrder((err, data) => {
+            if(err)
+                throw err
+            callback(null, data)
+        })
+    },
+    getDaysOrder : (callback, period) => {
+        adminModel.getDaysOrder((err, data) => {
+            if(err)
+                throw err
+            callback(null, data)
+        }, period)
+    },
 }

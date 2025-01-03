@@ -386,4 +386,46 @@ module.exports = {
         })
     },
 
+    getUserCount : (callback) => {
+        db.query("select count(*) as number_user from user;", (err, result) => {
+            if(err)
+                throw err
+            const data = result.map(row => row)
+            callback(null, data)
+        })
+    },
+    getHoursOrder : (callback) => {
+        db.query("select * from orders where timediff(ordertime, current_time) <= 24;", (err, result) => {
+            if(err)
+                throw err
+            const data = result.map(row => row)
+            callback(null, data)
+        })
+    },
+    getDaysOrder : (callback, period) => {
+        db.query("select * from orders where datediff(orderdate, current_date) <= ?;", [period], (err, result) => {
+            if(err)
+                throw err
+            const data = result.map(row => row)
+            callback(null, data)
+        })
+    },
+    // getOrderCount : (callback) => {
+    //     db.query("select count(*) as number_order from orders;", (err, result) => {
+    //         if(err)
+    //             throw err
+    //         const data = result.map(row => row)
+    //         callback(null, data)
+    //     })
+    // },
+    getDescOrder : (callback) => {
+        db.query("select * from orders inner join user on orders.userid = user.userid order by orderid desc;", (err, result) => {
+            if(err)
+                throw err
+            const data = result.map(row => row)
+            callback(null, data)
+        })
+    },
+    
+
 }

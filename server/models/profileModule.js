@@ -24,5 +24,16 @@ module.exports = {
                 callback(null, data)
             }
         })
-    }
+    },
+    updateProfile :  (callback, id, fullname, sex, number, email, date) => {
+        db.query("update user set fullname = ?, sex = ?, PhoneNumber = ?,  Email = ?, DOB = ? where userid = ?;", [fullname, sex, number, email, date, id], (err) => {
+            if(err){
+                throw err
+            }
+            else{
+                callback(null)
+            }
+        })
+    },
+    
 }

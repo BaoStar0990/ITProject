@@ -74,9 +74,9 @@ function Header(){
                                     {/* <a href="#" className="nav-link text-center">Tin tức</a> */}
                                     <Link to="/news" className="nav-link text-center">Tin tức</Link>
                                 </li>
-                                <li className="nav-item fw-semibold">
+                                {/* <li className="nav-item fw-semibold">
                                     <a href="#" className="nav-link text-center">Thành viên</a>
-                                </li>
+                                </li> */}
                             </ul>
                             <div className="d-flex flex-column gap-1">
                                 {/* <form action="">
@@ -96,7 +96,7 @@ function Header(){
                                             <ul className="dropdown-menu">
                                                 {/* <li><Link className="dropdown-item" to="/profile"><i className="fa-solid fa-user me-3"></i>Hồ sơ</Link></li> */}
                                                 <li><button onClick={queryProfile} className="dropdown-item" to="/profile"><i className="fa-solid fa-user me-3"></i>Hồ sơ</button></li>
-                                                <li><a className="dropdown-item" href="#"><i className="fa-regular fa-gem me-3"></i>Điểm thành viên</a></li>
+                                                {/* <li><a className="dropdown-item" href="#"><i className="fa-regular fa-gem me-3"></i>Điểm thành viên</a></li> */}
                                                 <li><hr className="dropdown-divider"/></li>
                                                 <li><button onClick={LogOut} type="button" className="dropdown-item"><i className="fa-solid fa-arrow-right-from-bracket me-3"></i>Đăng xuất</button></li>
                                             </ul>

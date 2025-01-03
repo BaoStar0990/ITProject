@@ -2,6 +2,102 @@ var express = require('express');
 var router = express.Router();
 const adminController = require("../controllers/adminController")
 
+router.get("/", async (req, res) => {
+    let data1 = []
+
+    const user_count = await new Promise((resolve, reject) => {
+        adminController.getUserCount((err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    // const orders = await new Promise((resolve, reject) => {
+    //     adminController.getAllOrder((err, result) => {
+    //         if (err) {
+    //             reject(err);
+    //         } else {
+    //             resolve(result);
+    //         }
+    //     });
+    // });
+
+    const hours_order = await new Promise((resolve, reject) => {
+        adminController.getHoursOrder((err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    const desc_order = await new Promise((resolve, reject) => {
+        adminController.getDescOrder((err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+
+    // data1 = [...data1, user_count[0].number_user]
+
+    const data = [user_count[0], hours_order, desc_order]
+    return res.json(data)
+})
+
+router.post("/", async (req, res) => {
+    console.log(req.body)
+
+    if(req.body.filter == "week"){
+        const period_order = await new Promise((resolve, reject) => {
+            adminController.getDaysOrder((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, 7);
+        });
+
+        console.log(period_order)
+
+        return res.json(period_order)
+    }
+    else if(req.body.filter == "month"){
+        const period_order = await new Promise((resolve, reject) => {
+            adminController.getDaysOrder((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            }, 30);
+        });
+
+        return res.json(period_order)
+    }
+    else if(req.body.filter == "hours"){
+        const period_order = await new Promise((resolve, reject) => {
+            adminController.getHoursOrder((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+
+        return res.json(period_order)
+    }
+})
+
 router.get("/user", async (req, res) => {
     let data1 = []
     let data2 = []

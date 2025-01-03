@@ -3,39 +3,56 @@ var router = express.Router();
 var profileController = require("../controllers/profileController")
 
 router.post("/", async (req, res) => {
-    // console.log(req.body.userId)
+    console.log(req.body)
 
     try {
-        let data1 = []
-        let data2 = []
-        
-        const result1 = await new Promise((resolve, reject) => {
-            profileController.getUserInfo((err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            }, req.body.userId);
-        });
 
-        const result2 = await new Promise((resolve, reject) => {
-            profileController.getUserOrders((err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            }, req.body.userId);
-        });
+        if(req.body.action == "update_profile"){
+            await new Promise((resolve, reject) => {
+                profileController.updateProfile((err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }, req.body.id, req.body.fullname, req.body.sex, req.body.number, req.body.email, req.body.date);
+            });
 
-        // console.log(result2)
-        data1 = [...data1, ...result1]
-        data2 = [...data2, ...result2]
+            res.redirect("http://localhost:5173/")
+        }
+        else{
+            let data1 = []
+            let data2 = []
+            
+            const result1 = await new Promise((resolve, reject) => {
+                profileController.getUserInfo((err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }, req.body.userId);
+            });
 
-        const data = [data1, data2] 
+            const result2 = await new Promise((resolve, reject) => {
+                profileController.getUserOrders((err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }, req.body.userId);
+            });
 
-        return res.json(data)
+            // console.log(result2)
+            data1 = [...data1, ...result1]
+            data2 = [...data2, ...result2]
+
+            const data = [data1, data2] 
+
+            return res.json(data)
+        }
+
     } catch (error) {
         return res.status(500).json({message : "Error 500"})
     }
